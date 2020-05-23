@@ -13,6 +13,8 @@ struct ContentView: View {
     @State var alertIsVisible = false
     @State var sliderValue = 50.0
     @State var target = Int.random(in: 1...100)
+    @State var score = 0;
+    @State var round = 1;
     
     var body: some View {
         VStack {
@@ -36,19 +38,25 @@ struct ContentView: View {
                 
                 //button row
                 Button(action: {
-                    self.alertIsVisible = true;
+                    self.alertIsVisible = true
                 }) {
                     Text("Hit me!")
                 }
                 .alert(isPresented: $alertIsVisible) { () -> Alert in
                     let roundedValue = sliderValueRounded()
+                    let points = pointsForCurrentRound();
+                    
                     return Alert(
-                        title: Text("Hello There"),
+                        title: Text("\(alertTitle())"),
                         message: Text(
                             "The sliders value is \(roundedValue).\n" +
-                            "You scored \(pointsForCurrentRound()) points in this round."
+                            "You scored \(points) points in this round."
                         ),
-                        dismissButton: .default(Text("Awesome!"))
+                        dismissButton: .default(Text("Awesome!")) {
+                            self.score += points
+                            self.target = Int.random(in: 1...100)
+                            self.round += 1;
+                        }
                     )
                 }
                 
@@ -63,12 +71,12 @@ struct ContentView: View {
                     Spacer()
                     
                     Text("Score: ")
-                    Text("999999")
+                    Text("\(score)")
                     
                     Spacer()
                     
                     Text("Round: ")
-                    Text("999")
+                    Text("\(round)")
                     
                     Spacer()
                     
@@ -84,8 +92,32 @@ struct ContentView: View {
         Int(sliderValue.rounded());
     }
     
+    func amountOff() -> Int {
+        return abs(target - sliderValueRounded());
+    }
+    
     func pointsForCurrentRound() -> Int {
-        100 - abs(target - sliderValueRounded());
+        100 - amountOff()
+    }
+    
+    func alertTitle() -> String {
+        let difference = amountOff()
+        let title:String
+        
+        if(difference == 0) {
+            title = "Perfect";
+        }
+        else if(difference < 5) {
+            title = "Almost there";
+        }
+        else if(difference <= 10) {
+            title = "Not bad";
+        }
+        else {
+            title = "Are you even trying?"
+        }
+        
+        return title;
     }
 }
 
