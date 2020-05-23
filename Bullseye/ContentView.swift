@@ -16,6 +16,8 @@ struct ContentView: View {
     @State var score = 0
     @State var round = 1
     
+    let midnightBlue = Color(red: 0.0 / 255.0, green: 51.0 / 255.0, blue: 102.0 / 255.0)
+    
     struct LabelStyle: ViewModifier {
         func body(content: Content) -> some View {
             return content
@@ -41,6 +43,22 @@ struct ContentView: View {
         }
     }
     
+    struct ButtonLargeTextStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            return content
+                .foregroundColor(Color.black)
+                .font(Font.custom("Arial Rounded MT Bold", size: 18))
+        }
+    }
+    
+    struct ButtonSmallTextStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            return content
+                .foregroundColor(Color.black)
+                .font(Font.custom("Arial Rounded MT Bold", size: 12))
+        }
+    }
+    
     var body: some View {
         VStack {
             
@@ -57,7 +75,7 @@ struct ContentView: View {
             //slider row
             HStack {
                 Text("1").modifier(LabelStyle())
-                Slider(value: $sliderValue, in: 1...100)
+                Slider(value: $sliderValue, in: 1...100).accentColor(Color.green)
                 Text("100").modifier(LabelStyle())
             }
             
@@ -65,7 +83,7 @@ struct ContentView: View {
             Button(action: {
                 self.alertIsVisible = true
             }) {
-                Text("Hit me!")
+                Text("Hit me!").modifier(ButtonLargeTextStyle())
             }
             .alert(isPresented: $alertIsVisible) { () -> Alert in
                 let roundedValue = sliderValueRounded()
@@ -83,7 +101,7 @@ struct ContentView: View {
                         self.round += 1
                     }
                 )
-            }
+                }.background(Image("Button")).modifier(ShadowStyle())
             
             Spacer()
             
@@ -92,8 +110,11 @@ struct ContentView: View {
                 Button(action: {
                     self.startNewGame()
                 }) {
-                    Text("Start over")
-                }
+                    HStack {
+                        Image("StartOverIcon")
+                        Text("Start over").modifier(ButtonSmallTextStyle())
+                    }
+                }.background(Image("Button"))
                 
                 Spacer()
                 
@@ -108,11 +129,18 @@ struct ContentView: View {
                 Spacer()
                 
                 Button(action: {}) {
-                    Text("Info")
-                }
-            }.padding(.bottom, 20)
+                    HStack {
+                        Image("InfoIcon")
+                        Text("Info").modifier(ButtonSmallTextStyle())
+                    }
+                    
+                }.background(Image("Button"))
+            }
+            //.padding(.bottom, 20)
         }
         .background(Image("Background"), alignment: .center)
+        .padding(.all, 40)
+        .accentColor(midnightBlue)
     }
     
     func sliderValueRounded() -> Int {
