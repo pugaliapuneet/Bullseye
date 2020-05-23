@@ -10,8 +10,9 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State var alertIsVisible:Bool = false;
-    @State var sliderValue:Double = 50.0;
+    @State var alertIsVisible = false
+    @State var sliderValue = 50.0
+    @State var target = Int.random(in: 1...100)
     
     var body: some View {
         VStack {
@@ -21,7 +22,7 @@ struct ContentView: View {
                 //target row
                 HStack {
                     Text("Put the bullseye as close as you can to:")
-                    Text("100")
+                    Text("\(target)")
                 }
                 
                 Spacer()
@@ -29,7 +30,7 @@ struct ContentView: View {
                 //slider row
                 HStack {
                     Text("1")
-                    Slider(value: self.$sliderValue, in: 1...100)
+                    Slider(value: $sliderValue, in: 1...100)
                     Text("100")
                 }
                 
@@ -40,10 +41,13 @@ struct ContentView: View {
                     Text("Hit me!")
                 }
                 .alert(isPresented: $alertIsVisible) { () -> Alert in
-                    var roundedValue:Int = Int(self.sliderValue.rounded())
+                    let roundedValue = sliderValueRounded()
                     return Alert(
                         title: Text("Hello There"),
-                        message: Text("The sliders value is \(roundedValue)."),
+                        message: Text(
+                            "The sliders value is \(roundedValue).\n" +
+                            "You scored \(pointsForCurrentRound()) points in this round."
+                        ),
                         dismissButton: .default(Text("Awesome!"))
                     )
                 }
@@ -74,6 +78,14 @@ struct ContentView: View {
                 }.padding(.bottom, 20)
             }
         }
+    }
+    
+    func sliderValueRounded() -> Int {
+        Int(sliderValue.rounded());
+    }
+    
+    func pointsForCurrentRound() -> Int {
+        100 - abs(target - sliderValueRounded());
     }
 }
 
