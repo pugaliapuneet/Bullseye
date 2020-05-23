@@ -13,8 +13,8 @@ struct ContentView: View {
     @State var alertIsVisible = false
     @State var sliderValue = 50.0
     @State var target = Int.random(in: 1...100)
-    @State var score = 0;
-    @State var round = 1;
+    @State var score = 0
+    @State var round = 1
     
     var body: some View {
         VStack {
@@ -64,7 +64,9 @@ struct ContentView: View {
                 
                 //score row
                 HStack {
-                    Button(action: {}) {
+                    Button(action: {
+                        self.startNewGame();
+                    }) {
                         Text("Start over")
                     }
                     
@@ -97,7 +99,21 @@ struct ContentView: View {
     }
     
     func pointsForCurrentRound() -> Int {
-        100 - amountOff()
+        let maximumScore = 100
+        let difference = amountOff()
+        let bonus:Int;
+        
+        if difference == 0 {
+            bonus = 100
+        }
+        else if difference == 1 {
+            bonus = 50
+        }
+        else {
+            bonus = 0
+        }
+        
+        return maximumScore - difference + bonus;
     }
     
     func alertTitle() -> String {
@@ -118,6 +134,13 @@ struct ContentView: View {
         }
         
         return title;
+    }
+    
+    func startNewGame () {
+        sliderValue = 50.0
+        target = Int.random(in: 1...100)
+        score = 0
+        round = 1
     }
 }
 
