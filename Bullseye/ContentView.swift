@@ -11,18 +11,27 @@ import SwiftUI
 struct ContentView: View {
     
     @State var alertIsVisible:Bool = false;
-    @State var whosThereisVisible:Bool = false;
     
     var body: some View {
         VStack {
             VStack {
+                Spacer()
                 
-                Text("Welcome to my first app!")
-                    .fontWeight(.semibold)
-                    .foregroundColor(Color.green)
+                //target row
+                HStack {
+                    Text("Put the bullseye as close as you can to:")
+                    Text("100")
+                }
+                Spacer()
+                //slider row
+                HStack {
+                    Text("1")
+                    Slider(value: .constant(10))
+                    Text("100")
+                }
                 
+                //button row
                 Button(action: {
-                    print("Button Pressed")
                     self.alertIsVisible = true;
                 }) {
                     Text("Hit me!")
@@ -36,15 +45,30 @@ struct ContentView: View {
                     )
                 }
                 
-                Button(action: {
-                    self.whosThereisVisible = true;
-                }) {
-                    Text("Knock Knock")
-                }
-                .alert(isPresented: $whosThereisVisible) { () ->
-                    Alert in
-                    return Alert(title: Text("Who's there?"), message: Text("A knock knock joke!"), dismissButton: .default(Text("Nice joke!")))
-                }
+                Spacer()
+                
+                //score row
+                HStack {
+                    Button(action: {}) {
+                        Text("Start over")
+                    }
+                    
+                    Spacer()
+                    
+                    Text("Score: ")
+                    Text("999999")
+                    
+                    Spacer()
+                    
+                    Text("Round: ")
+                    Text("999")
+                    
+                    Spacer()
+                    
+                    Button(action: {}) {
+                        Text("Info")
+                    }
+                }.padding(.bottom, 20)
             }
         }
     }
@@ -52,6 +76,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView().previewLayout(.fixed(width: 896, height: 414))
     }
 }
